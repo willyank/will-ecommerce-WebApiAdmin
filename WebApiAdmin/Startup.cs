@@ -11,6 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApiAdmin.Repositories;
+using WebApiAdmin.Repositories.Interfaces;
+using WebApiAdmin.Services;
 
 namespace WebApiAdmin
 {
@@ -32,6 +35,12 @@ namespace WebApiAdmin
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApiAdmin", Version = "v1" });
             });
+
+            services.AddScoped<IConnectionFactory, ConnectionFactory>();
+
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+            services.AddScoped<CategoryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
