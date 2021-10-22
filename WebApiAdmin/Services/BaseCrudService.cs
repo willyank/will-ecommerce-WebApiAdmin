@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EcommerceModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,6 +18,21 @@ namespace WebApiAdmin.Services
         public async Task<IEnumerable<T>> GetAll()
         {
             return await baseRepository.GetAll();
+        }
+
+        public async Task<int> Delete(long id)
+        {
+            return await baseRepository.Delete(id);
+        }
+
+        public async Task<T> Get(long id)
+        {
+            return await baseRepository.Get(id);
+        }
+
+        public async Task<long> Save(T obj)
+        {
+            return await baseRepository.Save(obj);
         }
     }
 }

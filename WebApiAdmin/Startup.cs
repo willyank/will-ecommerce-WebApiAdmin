@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApiAdmin.Repositories;
+using WebApiAdmin.Repositories.DatabaseFactories;
 using WebApiAdmin.Repositories.Interfaces;
 using WebApiAdmin.Services;
 
@@ -36,7 +37,7 @@ namespace WebApiAdmin
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApiAdmin", Version = "v1" });
             });
 
-            services.AddScoped<IConnectionFactory, ConnectionFactory>();
+            services.AddScoped<IConnectionFactory, PostgresConnectionFactory>();
 
             services.AddScoped<ICategoryRepository, CategoryRepository>();
 

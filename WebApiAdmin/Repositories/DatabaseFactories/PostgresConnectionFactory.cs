@@ -6,34 +6,26 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApiAdmin.Repositories.DatabaseFactories;
 
 namespace WebApiAdmin.Repositories
 {
-    public interface IConnectionFactory
-    {
-        DbConnection CreateConnection(string connectionName);
+    
 
-        DbConnection CreateConnection();
-    }
-
-    public class ConnectionFactory : IConnectionFactory
+    public class PostgresConnectionFactory : AbstractConnectionFactory
     {
         private IConfiguration _config;
 
 
-        public ConnectionFactory(IConfiguration configuration)
+        public PostgresConnectionFactory(IConfiguration configuration)
         {
             _config = configuration;
         }
 
-        public DbConnection CreateConnection(string connectionName)
+        public override DbConnection CreateConnection(string connectionName)
         {
             return new NpgsqlConnection(_config.GetConnectionString(connectionName));
         }
 
-        public DbConnection CreateConnection()
-        {
-            return CreateConnection("defaultConn");
-        }
     }
 }

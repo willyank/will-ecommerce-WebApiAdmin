@@ -23,5 +23,27 @@ namespace WebApiAdmin.Controllers
             var list = await baseCrudService.GetAll();
             return Ok(list);
         }
+
+        [Route("{id}")]
+        public async Task<IActionResult> Get(long id)
+        {
+            var obj = await baseCrudService.Get(id);
+            return Ok(obj);
+        }
+
+        [Route("")]
+        public async Task<IActionResult> Post([FromBody] T obj)
+        {
+            var total = await baseCrudService.Save(obj);
+            return Ok(total);
+        }
+
+        [Route("{id}")]
+        [HttpDelete]
+        public async Task<IActionResult> Delete(long id)
+        {
+            var total = await baseCrudService.Delete(id);
+            return Ok(total);
+        }
     }
 }
