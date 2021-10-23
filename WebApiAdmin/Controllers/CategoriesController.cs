@@ -11,10 +11,10 @@ namespace WebApiAdmin.Controllers
 {
     [Route("api/categories")]
     [ApiController]
-    public class CategoryController : BaseCrudController<Category>
+    public class CategoriesController : BaseCrudController<Category>
     {
 
-        public CategoryController(CategoryService categoryService) : base(categoryService)
+        public CategoriesController(CategoriesService categoryService) : base(categoryService)
         {
 
         }

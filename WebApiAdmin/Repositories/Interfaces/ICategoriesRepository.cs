@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebApiAdmin.Repositories.Interfaces
 {
-  public   interface ICategoryRepository : IBaseRepository<Category>
+  public   interface ICategoriesRepository : IBaseRepository<Category>
     {
     }
 }

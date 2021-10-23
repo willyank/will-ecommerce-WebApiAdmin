@@ -39,9 +39,11 @@ namespace WebApiAdmin
 
             services.AddScoped<IConnectionFactory, PostgresConnectionFactory>();
 
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ICategoriesRepository, CategoriesRepository>();
+            services.AddScoped<IProductsRepository, ProductsRepository>();
 
-            services.AddScoped<CategoryService>();
+            services.AddScoped<CategoriesService>();
+            services.AddScoped<ProductsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,9 +52,11 @@ namespace WebApiAdmin
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApiAdmin v1"));
+                
             }
+            
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApiAdmin v1"));
 
             app.UseHttpsRedirection();
 

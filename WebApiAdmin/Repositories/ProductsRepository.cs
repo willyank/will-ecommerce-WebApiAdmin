@@ -8,9 +8,9 @@ using WebApiAdmin.Repositories.Interfaces;
 
 namespace WebApiAdmin.Repositories
 {
-    public class CategoryRepository : BaseRepository<Category>, ICategoryRepository
+    public class ProductsRepository: BaseRepository<Product>, IProductsRepository
     {
-        public CategoryRepository(IConnectionFactory connFacotry) : base(connFacotry)
+        public ProductsRepository(IConnectionFactory connFacotry) : base(connFacotry)
         {
 
         }

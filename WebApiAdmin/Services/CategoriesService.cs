@@ -7,9 +7,9 @@ using WebApiAdmin.Repositories.Interfaces;
 
 namespace WebApiAdmin.Services
 {
-    public class CategoryService : BaseCrudService<Category>
+    public class CategoriesService : BaseCrudService<Category>
     {
-        public CategoryService(ICategoryRepository repo): base(repo)
+        public CategoriesService(ICategoriesRepository repo): base(repo)
         {
 
         }
