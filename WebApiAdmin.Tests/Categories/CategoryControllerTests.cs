@@ -12,18 +12,20 @@ using WebApiAdmin.Repositories.Interfaces;
 using WebApiAdmin.Repositories;
 using Moq;
 using WebApiAdmin.Tests.Categories;
+using NgStore.Framework.Logs;
 
 namespace WebApiAdmin.Tests
 {
     public class CategoryControllerTests : BaseCrudControllerTests<Category>
     {
         Mock<ICategoriesRepository> mock;
+        Mock<ILoggerService> mockLog;
         CategoriesController controller;
         public CategoryControllerTests()
         {
            mock = new Mock<ICategoriesRepository>();
 
-            var service = new CategoriesService(mock.Object);
+            var service = new CategoriesService(mockLog.Object, mock.Object);
             controller = new CategoriesController(service);
            
         }

@@ -22,8 +22,8 @@ namespace WebApiAdmin.Tests.Categories
         public BaseCrudControllerTests()
         {
             this.baseMock = new Mock<IBaseRepository<T>>();
-            var baseService = new BaseCrudService<T>(baseMock.Object);
-            baseController = new BaseCrudController<T>(baseService);
+            // var baseService = new BaseCrudService<T>(baseMock.Object);
+            //vbaseController = new BaseCrudController<T>(baseService);
         }
 
         public abstract Task<IEnumerable<T>> GetFakeList();
@@ -46,32 +46,32 @@ namespace WebApiAdmin.Tests.Categories
         //    return Task.FromResult(list);
         //}
 
-        [Fact]
-        public async Task GetAllGeneric()
-        {
-            var t = Mock.Of<ICategoriesRepository>();
-            baseMock.Setup(x => x.GetAll()).Returns(GetFakeList());
+        //[Fact]
+        //public async Task GetAllGeneric()
+        //{
+        //    var t = Mock.Of<ICategoriesRepository>();
+        //    baseMock.Setup(x => x.GetAll()).Returns(GetFakeList());
 
-            var actionResult = await baseController.GetAll();
+        //    var actionResult = await baseController.GetAll();
 
-            var okResult = actionResult.Result as OkObjectResult;
-            var result = okResult.Value as IEnumerable<Category>;
+        //    var okResult = actionResult.Result as OkObjectResult;
+        //    var result = okResult.Value as IEnumerable<Category>;
 
-            Assert.Equal(2, result.Count());
-        }
+        //    Assert.Equal(2, result.Count());
+        //}
 
-        [Fact]
-        public async Task InsertGeneric()
-        {
-            baseMock.Setup(x => x.Save(It.IsAny<T>())).Returns(Task.FromResult<long>(1));
+        //[Fact]
+        //public async Task InsertGeneric()
+        //{
+        //    baseMock.Setup(x => x.Save(It.IsAny<T>())).Returns(Task.FromResult<long>(1));
 
-            var actionResult = await baseController.Post(GetInsertFake());
+        //    var actionResult = await baseController.Post(GetInsertFake());
 
-            var okResult = actionResult.Result as OkObjectResult;
-            var result = (long)okResult.Value;
+        //    var okResult = actionResult.Result as OkObjectResult;
+        //    var result = (long)okResult.Value;
 
-            Assert.Equal(1, result);
-        }
+        //    Assert.Equal(1, result);
+        //}
 
     }
 }
