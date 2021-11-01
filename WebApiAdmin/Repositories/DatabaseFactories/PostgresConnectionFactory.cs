@@ -2,6 +2,7 @@
 using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace WebApiAdmin.Repositories
             _config = configuration;
         }
 
-        public override DbConnection CreateConnection(string connectionName)
+        public override IDbConnection CreateConnection(string connectionName)
         {
             return new NpgsqlConnection(_config.GetConnectionString(connectionName));
         }

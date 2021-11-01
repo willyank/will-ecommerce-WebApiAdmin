@@ -14,5 +14,10 @@ namespace WebApiAdmin.Repositories
         {
 
         }
+
+        public async Task<bool> Teste()
+        {
+            return true;
+        }
     }
 }

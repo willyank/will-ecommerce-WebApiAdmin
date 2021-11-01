@@ -9,7 +9,7 @@ using WebApiAdmin.Services;
 
 namespace WebApiAdmin.Controllers
 {
-    [Route("api/categories")]
+    [Route("api/v1/categories")]
     [ApiController]
     public class CategoriesController : BaseCrudController<Category>
     {
@@ -18,7 +18,5 @@ namespace WebApiAdmin.Controllers
         {
 
         }
-
-
     }
 }

@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace WebApiAdmin.Repositories.Interfaces
 {
-  public   interface ICategoriesRepository : IBaseRepository<Category>
+    public interface ICategoriesRepository : IBaseRepository<Category>
     {
+        Task<bool> Teste();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using EcommerceModels;
+using NgStore.Framework.Logs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace WebApiAdmin.Services
 {
     public class ProductsService : BaseCrudService<Product>
     {
-        public ProductsService(IProductsRepository repo) : base(repo)
+        public ProductsService(ILoggerService logger, IProductsRepository repo) : base(logger, repo)
         {
 
         }

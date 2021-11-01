@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using NgStore.Framework.Logs;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +39,8 @@ namespace WebApiAdmin
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApiAdmin", Version = "v1" });
             });
 
+            services.AddSingleton<ILoggerService, SerilogLoggerService>();
+
             services.AddScoped<IConnectionFactory, PostgresConnectionFactory>();
 
             services.AddScoped<ICategoriesRepository, CategoriesRepository>();
@@ -51,9 +55,12 @@ namespace WebApiAdmin
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-                
+                app.UseDeveloperExceptionPage();                
             }
+
+            app.UseSerilogRequestLogging();
+
+            app.UseCors(x => x.AllowAnyOrigin());
             
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApiAdmin v1"));

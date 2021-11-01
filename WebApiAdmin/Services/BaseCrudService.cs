@@ -1,4 +1,5 @@
 ﻿using EcommerceModels;
+using NgStore.Framework.Logs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,17 +8,21 @@ using WebApiAdmin.Repositories;
 
 namespace WebApiAdmin.Services
 {
-    public class BaseCrudService<T>
+    public class BaseCrudService<T> where T : BaseModel
     {
         private IBaseRepository<T> baseRepository;
-        public BaseCrudService(IBaseRepository<T> repo)
+        protected ILoggerService logger;
+        public BaseCrudService(ILoggerService logger, IBaseRepository<T> repo)
         {
             this.baseRepository = repo;
+            this.logger = logger;
         }
 
         public async Task<IEnumerable<T>> GetAll()
         {
-            return await baseRepository.GetAll();
+            var list = await baseRepository.GetAll();
+            logger.Debug("fez o getAll " + list.Count());
+            return list;
         }
 
         public async Task<int> Delete(long id)
@@ -30,7 +35,7 @@ namespace WebApiAdmin.Services
             return await baseRepository.Get(id);
         }
 
-        public async Task<long> Save(T obj)
+        public virtual async Task<long> Save(T obj)
         {
             return await baseRepository.Save(obj);
         }

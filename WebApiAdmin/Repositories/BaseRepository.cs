@@ -3,15 +3,17 @@ using EcommerceModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using WebApiAdmin.Repositories.DatabaseFactories;
 
 namespace WebApiAdmin.Repositories
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T : BaseModel
+    public abstract class BaseRepository<T> : IBaseRepository<T> where T : BaseModel
     {
         private readonly IConnectionFactory connectionFactory;
         public BaseRepository(IConnectionFactory connFacotry)
@@ -19,7 +21,7 @@ namespace WebApiAdmin.Repositories
             connectionFactory = connFacotry;
         }
 
-        public DbConnection OpenConnection()
+        public IDbConnection OpenConnection()
         {
             return connectionFactory.CreateConnection();
         }
@@ -35,12 +37,20 @@ namespace WebApiAdmin.Repositories
             }
         }
 
+        private IEnumerable<PropertyInfo> Properties
+        {
+            get
+            {
+                return typeof(T).GetProperties().Where(w => w.Name != "Id");
+            }
+        }
+
 
         private string GetInsertSql()
         {
             var sql = $"insert into {TableName} ({{0}}) values ({{1}}) RETURNING id";
 
-            var fields = typeof(T).GetProperties().Where(w => w.Name != "Id").Select(s => s.Name);
+            var fields = Properties.Select(s => s.Name);
             var fieldsName = string.Join(",", fields);
             var fieldsParam = string.Join(",", fields.Select(field => $"@{field}"));
 
@@ -52,7 +62,7 @@ namespace WebApiAdmin.Repositories
         {
             using (var conn = OpenConnection())
             {
-                var totalDeleted = await conn.ExecuteAsync($"delete from {TableName} where id = @id", param: new { id });
+                var totalDeleted = await conn.ExecuteAsync($"delete from {TableName} where id = @Id", param: new { id });
                 return totalDeleted;
             }
         }
@@ -61,7 +71,7 @@ namespace WebApiAdmin.Repositories
         {
             using (var conn = OpenConnection())
             {
-                var obj = await conn.QuerySingleAsync<T>($"select * from {TableName} where id = @id", param: new { id });
+                var obj = await conn.QuerySingleAsync<T>($"select * from {TableName} where id = @Id", param: new { id });
                 return obj;
             }
         }
@@ -78,10 +88,28 @@ namespace WebApiAdmin.Repositories
 
         public async Task<long> Save(T obj)
         {
+            if(obj.Id > 0)
+            {
+                return await Update(obj);
+            }
+
             using (var conn = OpenConnection())
             {
                 var sql = GetInsertSql();
                 var result = await conn.ExecuteScalarAsync<long>(sql, param: obj);
+                return result;
+            }
+        }
+
+        public async Task<int> Update(T obj)
+        {
+            using (var conn = OpenConnection())
+            {
+                var fields = Properties.Select(s => $"{s.Name}=@{s.Name}");
+                var sql = $"update {TableName} set {{0}} where id = @Id";
+
+                var sqlParams = string.Format(sql, string.Join(", ", fields));
+                var result = await conn.ExecuteAsync(sqlParams, param: obj);
                 return result;
             }
         }

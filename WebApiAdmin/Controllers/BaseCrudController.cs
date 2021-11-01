@@ -45,10 +45,19 @@ namespace WebApiAdmin.Controllers
         {
             if (!ModelState.IsValid)
             {
-
+                return BadRequest(ModelState.Values);
             }
             var total = await baseCrudService.Save(obj);
             return Ok(total);
+        }
+
+        [Route("")]
+        [HttpPut]
+        [ProducesResponseType(typeof(long), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<long>> Put([FromBody] T obj)
+        {
+            return await Post(obj);
         }
 
         [Route("{id}")]

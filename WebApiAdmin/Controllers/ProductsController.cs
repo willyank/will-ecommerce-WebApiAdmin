@@ -9,7 +9,7 @@ using WebApiAdmin.Services;
 
 namespace WebApiAdmin.Controllers
 {
-    [Route("api/products")]
+    [Route("api/v1/products")]
     [ApiController]
     public class ProductsController : BaseCrudController<Product>
     {
