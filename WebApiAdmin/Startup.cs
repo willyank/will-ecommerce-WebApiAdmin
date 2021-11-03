@@ -58,22 +58,21 @@ namespace WebApiAdmin
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerService logger)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseSerilogRequestLogging(options =>
-            {
-                options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
-                {
-                    // diagnosticContext.Set("ClientIP", httpContext.Connection.RemoteIpAddress);
-                    
-                };
-                options.MessageTemplate = "HTTP {StatusCode} {RequestMethod} {RequestPath} in {Elapsed:0.0000}";
-            });
+            app.UseSerilogRequestLogging();
             
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.Use(async (ctx, next) => {
+                using (LogContext.PushProperty("ClientIP", ctx.Connection.RemoteIpAddress))
+                {
+                    await next();
+                }
+            });
 
             app.UseMiddleware<RequestLogContextMiddleware>();
 
