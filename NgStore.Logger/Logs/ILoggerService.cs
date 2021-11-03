@@ -10,7 +10,6 @@ namespace NgStore.Framework.Logs
     {
         public void Info(string info);
         public void Warning(string warn);
-        public void Debug(string debug);
-        public void Error(string error);
+        public void Error(Exception ex, string error);
     }
 }

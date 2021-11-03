@@ -1,5 +1,7 @@
 ﻿using Serilog;
 using Serilog.Events;
+using Serilog.Exceptions;
+using Serilog.Formatting.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,18 +15,19 @@ namespace NgStore.Framework.Logs
         public SerilogLoggerService()
         {
             Log.Logger = new LoggerConfiguration()
-            //     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-            //.Enrich.FromLogContext()
-            .MinimumLevel.Information()
+                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            .Enrich.FromLogContext()
+            // .Enrich.WithProperty("teste", "testeeee")
+            .Enrich.WithExceptionDetails()
+            //.MinimumLevel.Information()
             .WriteTo.Console()
-            .WriteTo.File("logs/log.txt",
+            .WriteTo.File(                
+                path: "logs/log-.txt",                
+                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}][{ClientIP}] {Message}{Body}{NewLine}{Exception}",
+                // formatter: new JsonFormatter(renderMessage: true),
                 rollingInterval: RollingInterval.Day,
                 rollOnFileSizeLimit: true)
             .CreateLogger();
-        }
-        public void Debug(string debug)
-        {
-            Log.Information("Hello, Serilog! debug");
         }
 
         public void Dispose()
@@ -32,14 +35,14 @@ namespace NgStore.Framework.Logs
             Log.CloseAndFlush();
         }
 
-        public void Error(string error)
+        public void Error(Exception ex, string error)
         {
-            throw new NotImplementedException();
+            Log.Error(ex, error);
         }
 
         public void Info(string info)
         {
-            Log.Information("Hello, Serilog!");
+            Log.Information(info);
         }
 
         public void Warning(string warn)

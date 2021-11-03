@@ -21,7 +21,7 @@ namespace WebApiAdmin.Services
         public async Task<IEnumerable<T>> GetAll()
         {
             var list = await baseRepository.GetAll();
-            logger.Debug("fez o getAll " + list.Count());
+            logger.Info("fez o getAll " + list.Count());
             return list;
         }
 
