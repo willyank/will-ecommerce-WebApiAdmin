@@ -62,7 +62,7 @@ namespace WebApiAdmin.Repositories
         {
             using (var conn = OpenConnection())
             {
-                var totalDeleted = await conn.ExecuteAsync($"delete from {TableName} where id = @Id", param: new { id });
+                var totalDeleted = await conn.ExecuteAsync($"delete from {TableName} where id = @Id", param: new { Id = id });
                 return totalDeleted;
             }
         }
@@ -71,7 +71,7 @@ namespace WebApiAdmin.Repositories
         {
             using (var conn = OpenConnection())
             {
-                var obj = await conn.QuerySingleAsync<T>($"select * from {TableName} where id = @Id", param: new { id });
+                var obj = await conn.QuerySingleAsync<T>($"select * from {TableName} where id = @Id", param: new { Id = id });
                 return obj;
             }
         }
