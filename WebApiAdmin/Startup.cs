@@ -76,7 +76,8 @@ namespace WebApiAdmin
 
             app.UseMiddleware<RequestLogContextMiddleware>();
 
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod());
+            
+            app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApiAdmin v1"));
