@@ -29,6 +29,14 @@ namespace WebApiAdmin.Controllers
             return Ok(list);
         }
 
+        [Route("paginated")]
+        [HttpGet]
+        public async Task<ActionResult<T>> GetPaginated([FromQuery] int page = 0, [FromQuery] int rowsPage = 50, [FromQuery] string columnOrder = null)
+        {
+            var list = await baseCrudService.GetPaginated(page, rowsPage, columnOrder);
+            return Ok(list);
+        }
+
         [Route("{id}")]
         [HttpGet]
         public async Task<ActionResult<T>> Get(long id)

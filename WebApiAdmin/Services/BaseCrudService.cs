@@ -21,7 +21,12 @@ namespace WebApiAdmin.Services
         public async Task<IEnumerable<T>> GetAll()
         {
             var list = await baseRepository.GetAll();
-            logger.Info("fez o getAll " + list.Count());
+            return list;
+        }
+
+        public async Task<IEnumerable<T>> GetPaginated(int page, int rowsPage, string columnOrder)
+        {
+            var list = await baseRepository.GetPaginated(page, rowsPage, columnOrder);
             return list;
         }
 

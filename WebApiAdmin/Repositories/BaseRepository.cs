@@ -86,6 +86,17 @@ namespace WebApiAdmin.Repositories
             }
         }
 
+        public async Task<IEnumerable<T>> GetPaginated(int page, int rowsPage, string columnOrder)
+        {
+
+            using (var conn = OpenConnection())
+            {
+                var list = await conn.QueryAsync<T>($"select * from {TableName} order by {columnOrder ?? "id"} limit {rowsPage} offset {page * rowsPage}");
+                return list;
+            }
+        }
+
+
         public async Task<long> Save(T obj)
         {
             if(obj.Id > 0)
