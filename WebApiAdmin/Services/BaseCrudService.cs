@@ -24,7 +24,7 @@ namespace WebApiAdmin.Services
             return list;
         }
 
-        public async Task<IEnumerable<T>> GetPaginated(int page, int rowsPage, string columnOrder)
+        public async Task<Pagination<T>> GetPaginated(int page, int rowsPage, string columnOrder)
         {
             var list = await baseRepository.GetPaginated(page, rowsPage, columnOrder);
             return list;

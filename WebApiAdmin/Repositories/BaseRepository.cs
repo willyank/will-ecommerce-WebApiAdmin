@@ -86,13 +86,48 @@ namespace WebApiAdmin.Repositories
             }
         }
 
-        public async Task<IEnumerable<T>> GetPaginated(int page, int rowsPage, string columnOrder)
+        public async Task<Pagination<T>> GetPaginated(int page, int rowsPage, string columnOrder)
         {
 
             using (var conn = OpenConnection())
             {
-                var list = await conn.QueryAsync<T>($"select * from {TableName} order by {columnOrder ?? "id"} limit {rowsPage} offset {page * rowsPage}");
-                return list;
+                var query = @$"select 
+                                    count(*) OVER() AS Total, 
+                                    * 
+                                from 
+                                    {TableName} 
+                                order by 
+                                    @columnOrder 
+                                limit 
+                                    @rowsPage 
+                                offset 
+                                    @offset";
+        
+                var lookup = new Dictionary<long, Pagination<T>>();
+                var query1 = await conn.QueryAsync<Pagination<T>, T, Pagination<T>>(query,
+                    (page, obj) =>
+                    {
+                        Pagination<T> temp;
+                        if (!lookup.TryGetValue(page.Total, out temp))
+                        {
+                            temp = page;
+                            temp.Items = new List<T>();
+                            lookup.Add(page.Total, temp);
+                        }
+
+                        if (obj != null)
+                        {
+                            temp.Items.Add(obj);
+                        }
+
+                        return temp;
+
+                    },
+                    param: new { columnOrder = columnOrder ?? "id", rowsPage, offset = page * rowsPage },
+                    splitOn: "Total, id",
+                    commandType: CommandType.Text);
+
+                return lookup.Values.FirstOrDefault();
             }
         }
 
