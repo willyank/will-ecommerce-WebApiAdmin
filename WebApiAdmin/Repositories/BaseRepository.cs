@@ -88,7 +88,7 @@ namespace WebApiAdmin.Repositories
 
         public async Task<Pagination<T>> GetPaginated(int page, int rowsPage, string columnOrder)
         {
-            if(!typeof(T).GetProperties().Any(any => any.Name.ToLower() == columnOrder.ToLower()))
+            if(!typeof(T).GetProperties().Any(any => any.Name.ToLower() == columnOrder?.ToLower()))
             {
                 return null;
             }
