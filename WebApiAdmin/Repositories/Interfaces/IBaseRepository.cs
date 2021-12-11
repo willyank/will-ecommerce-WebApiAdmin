@@ -9,7 +9,7 @@ namespace WebApiAdmin.Repositories
     public interface IBaseRepository<T> where T : class
     {
         Task<IEnumerable<T>> GetAll();
-        Task<Pagination<T>> GetPaginated(int page, int rowsPage, string columnOrder);
+        Task<Pagination<T>> GetPaginated(int page, int rowsPage, string columnOrder, bool descending);
         Task<T> Get(long id);
         Task<long> Save(T obj);
 

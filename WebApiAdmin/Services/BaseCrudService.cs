@@ -24,9 +24,9 @@ namespace WebApiAdmin.Services
             return list;
         }
 
-        public async Task<Pagination<T>> GetPaginated(int page, int rowsPage, string columnOrder)
+        public async Task<Pagination<T>> GetPaginated(int page, int rowsPage, string columnOrder, bool descending)
         {
-            var list = await baseRepository.GetPaginated(page, rowsPage, columnOrder);
+            var list = await baseRepository.GetPaginated(page, rowsPage, columnOrder, descending);
             return list;
         }
 

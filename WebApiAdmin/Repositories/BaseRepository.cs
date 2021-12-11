@@ -86,7 +86,7 @@ namespace WebApiAdmin.Repositories
             }
         }
 
-        public async Task<Pagination<T>> GetPaginated(int page, int rowsPage, string columnOrder)
+        public async Task<Pagination<T>> GetPaginated(int page, int rowsPage, string columnOrder, bool descending)
         {
             var order = "id";
             if(typeof(T).GetProperties().Any(any => any.Name.ToLower() == columnOrder?.ToLower()))
@@ -102,7 +102,7 @@ namespace WebApiAdmin.Repositories
                                 from 
                                     {TableName} 
                                 order by 
-                                    {order}
+                                    {order} {(descending ? "desc" : "asc")}
                                 limit 
                                     @rowsPage 
                                 offset 
