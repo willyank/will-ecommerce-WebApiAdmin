@@ -8,6 +8,5 @@ namespace WebApiAdmin.Repositories.Interfaces
 {
     public interface ICategoriesRepository : IBaseRepository<Category>
     {
-        Task<bool> Teste();
     }
 }

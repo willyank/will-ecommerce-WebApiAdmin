@@ -37,6 +37,20 @@ namespace WebApiAdmin.Tests.Categories
                     Name = "Cat2",
                     Color = "Color 2",
                     Icon = "Icon2",
+                },
+                 new Category()
+                {
+                    Id = 3,
+                    Name = "Cat3",
+                    Color = "Color 3",
+                    Icon = "Icon2",
+                },
+                  new Category()
+                {
+                    Id = 4,
+                    Name = "Cat4",
+                    Color = "Color 4",
+                    Icon = "Icon2",
                 }
             };
 
