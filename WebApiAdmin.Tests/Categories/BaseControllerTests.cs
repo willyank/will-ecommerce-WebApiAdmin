@@ -1,6 +1,7 @@
 ﻿using EcommerceModels;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using NgStore.Framework.Logs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,61 +18,76 @@ namespace WebApiAdmin.Tests.Categories
     public abstract class BaseCrudControllerTests<T> where T : BaseModel, new()
     {
         protected Mock<IBaseRepository<T>> baseMock;
+        protected Mock<ILoggerService> mockLog;
         protected BaseCrudController<T> baseController;
+
 
         public BaseCrudControllerTests()
         {
             this.baseMock = new Mock<IBaseRepository<T>>();
-            // var baseService = new BaseCrudService<T>(baseMock.Object);
-            //vbaseController = new BaseCrudController<T>(baseService);
+            mockLog = new Mock<ILoggerService>();
+
+            var baseService = new BaseCrudService<T>(mockLog.Object, baseMock.Object);
+            baseController = new BaseCrudController<T>(baseService);
         }
 
         public abstract Task<IEnumerable<T>> GetFakeList();
-        public abstract T GetInsertFake();
+        public abstract T GetFakeObject();
 
-        //private Task<IEnumerable<T>> GetFakeList()
-        //{
-        //    IEnumerable<T> list = new List<T>()
-        //        {
-        //            new T()
-        //        {
-        //            Id = 1,
-        //        },
-        //            new T()
-        //        {
-        //            Id = 2,
-        //        }
-        //    };
+        [Fact]
+        public async Task GetAllGeneric()
+        {
+            baseMock.Setup(x => x.GetAll()).Returns(GetFakeList());
 
-        //    return Task.FromResult(list);
-        //}
+            var actionResult = await baseController.GetAll();
 
-        //[Fact]
-        //public async Task GetAllGeneric()
-        //{
-        //    var t = Mock.Of<ICategoriesRepository>();
-        //    baseMock.Setup(x => x.GetAll()).Returns(GetFakeList());
+            var okResult = actionResult.Result as OkObjectResult;
+            var result = okResult.Value as IEnumerable<Category>;
 
-        //    var actionResult = await baseController.GetAll();
+            Assert.Equal(4, result.Count());
+        }
 
-        //    var okResult = actionResult.Result as OkObjectResult;
-        //    var result = okResult.Value as IEnumerable<Category>;
+        [Fact]
+        public async Task GetPaginatedGeneric()
+        {
+            var list = await GetFakeList();
+            var mockPage = new Pagination<T>() { Items = list.ToList(), Total = list.Count() };
+            baseMock.Setup(x => x.GetPaginated(0, 4, null)).Returns(Task.FromResult(mockPage));
 
-        //    Assert.Equal(2, result.Count());
-        //}
+            var actionResult = await baseController.GetPaginated(0, 4);
 
-        //[Fact]
-        //public async Task InsertGeneric()
-        //{
-        //    baseMock.Setup(x => x.Save(It.IsAny<T>())).Returns(Task.FromResult<long>(1));
+            var okResult = actionResult.Result as OkObjectResult;
+            var result = okResult.Value as Pagination<Category>;
 
-        //    var actionResult = await baseController.Post(GetInsertFake());
+            Assert.Equal(4, result.Items.Count());
+        }
 
-        //    var okResult = actionResult.Result as OkObjectResult;
-        //    var result = (long)okResult.Value;
+        [Fact]
+        public async Task InsertGeneric()
+        {
+            baseMock.Setup(x => x.Save(It.IsAny<T>())).Returns(Task.FromResult<long>(1));
 
-        //    Assert.Equal(1, result);
-        //}
+            var actionResult = await baseController.Post(GetFakeObject());
+
+            var okResult = actionResult.Result as OkObjectResult;
+            var result = (long)okResult.Value;
+
+            Assert.Equal(1, result);
+        }
+
+        [Fact]
+        public async Task GetGeneric()
+        {
+            var obj = (await GetFakeList()).FirstOrDefault(f => f.Id == 1);
+            baseMock.Setup(x => x.Get(It.IsAny<long>())).Returns(Task.FromResult(obj));
+
+            var actionResult = await baseController.Get(1);
+            var okResult = actionResult.Result as OkObjectResult;
+
+            var returnObject = okResult.Value as T;
+
+            Assert.Equal(1, returnObject.Id);
+        }
 
     }
 }
