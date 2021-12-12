@@ -52,7 +52,7 @@ namespace WebApiAdmin.Tests.Categories
         {
             var list = await GetFakeList();
             var mockPage = new Pagination<T>() { Items = list.ToList(), Total = list.Count() };
-            baseMock.Setup(x => x.GetPaginated(0, 4, null)).Returns(Task.FromResult(mockPage));
+            baseMock.Setup(x => x.GetPaginated(0, 4, null, false)).Returns(Task.FromResult(mockPage));
 
             var actionResult = await baseController.GetPaginated(0, 4);
 
